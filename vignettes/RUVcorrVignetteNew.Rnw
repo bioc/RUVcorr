@@ -1,0 +1,260 @@
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{RUVcorr}
+%%\usepackage[utf8]{inputenc}
+\documentclass{article}
+
+<<style-knitr, eval=TRUE, echo=FALSE, results="asis">>=
+BiocStyle::latex()
+@
+
+\bioctitle[\Rpackage{RUVcorr}]{Simulating and cleaning gene expression data using \Rpackage{RUVcorr} in the context of inferring gene co-expression}
+\author{Saskia Freytag \footnote{freytag.s@wehi.edu.au}}
+
+\begin{document}
+\maketitle
+
+The \R{} package \Rpackage{RUVcorr} allows the simulation and cleaning of gene expression data using global removal of unwanted variation (RUV) \cite{GagnonBartsch} when the aim is the inference of gene co-expression. Besides the RUV procedure, the package offers extensive plotting options related to its application and can simulate realistic gene expression data with a known gene correlation structure. Although the procedures in the \Rpackage{RUVcorr} package have so far only been applied to microarray gene expression data it should be feasible to apply it to RNA-seq data as well, as long as suitable read-count summaries have been generated and the coverage is sufficient, however this remains untested.
+
+Loading \Rpackage{RUVcorr} is achieved with the command:
+<<>>=
+library(RUVcorr)
+@
+
+\section{Simulating gene expression data with a known gene correlation structure}
+The simulation of gene expression data relies on the linear model framework introduced by Gagnon-Bartsch and Speed \cite{GagnonBartsch}. Briefly, they assume that any gene expression measurement can be expressed as a linear combination of biological signal $X\beta$, systematic noise $W\alpha$, and random noise $\epsilon$ (typically assumed to be iid normally distributed).
+\begin{equation}
+Y=X\beta+W\alpha+\epsilon
+\end{equation}
+
+where\\
+	\begin{tabular}[h!]{lcl}
+	$Y$ & is &a $m \times n$ matrix of observed gene expression data, \\
+	$X$ & is &a $m \times p$ matrix containing the unobserved factors of interest,\\
+	$\beta$ & is &a $p \times n$ matrix of regression coefficients associated with $X$, \\
+	$W$ & is &a $m \times k$ matrix of unobserved covariates introducing systematic  noise, \\
+	$\alpha$ & is &a $k \times n$ matrix of regression coefficients associated with $W$ \\
+	$\epsilon$ & is &a $m \times n$ matrix of random noise.\\
+	\end{tabular}
+  
+In the context of this model and for the purposes of simulating gene expression data with a known gene correlation structure, the true underlying gene structure is assumed to be
+$\Sigma=Cor(X\beta)$. The size of the absolute value of the correlations can be somewhat controlled using the dimensionality of $X$ and $\beta$, $p$. When $p$ is increased the size of the absolute value of the correlations in $\Sigma$ is reduced. Note that some genes (negative controls) are unaffected by this, as their correlation with each other as well as other genes is defined to be 0. Negative control genes are genes that are believed to be unrelated to the factor of interest.
+
+\subsection{Independence of biological signal and systematic noise}
+The simplest simulation of gene expression data assumes that the biological signal and the systematic noise are uncorrelated with each other. So $X$ is simulated in a fashion that it renders it independent from $W$. 
+After simulating the data, the \Rcode{print} command allows you to get a useful overview of the simulated data as well as some meta data.
+<<sim1>>=
+set.seed(400)
+Yind <- simulateGEdata(n=3000, m=1000, k=10, size.alpha=2,
+                       corr.strength=5, g=NULL, Sigma.eps=0.1, 
+                       nc=2000, ne=1000, intercept=TRUE, check=TRUE)
+print(Yind)
+@
+\bioccomment{Note that the parameter \Rcode{corr.strength} refers to $p$. The parameters
+\Rcode{nc} and \Rcode{ne} refer to the number of negative control genes and truly expressed genes
+(i.e.\ with a mean true gene expression greater than 0.) The parameter \Rcode{intercept} controls whether
+$W$ contains an offset or not.}
+
+\subsection{Dependence of biological signal and systematic noise}
+It is more realistic to assume that there is some dependence between $X$ and $W$. Using the parameter \Rcode{g} ($0<g \leq \min(k,p)$) it is possible to introduce different levels of correlation between signal and systematic noise. Choosing a larger value for \Rcode{g} will introduce more dependency between $X$ and $W$. Here \Rcode{g} refers to the dimension of the shared subspace of $X$ and $W$.
+<<sim2>>=
+set.seed(400)
+Ydep <- simulateGEdata(n=3000, m=1000, k=10, size.alpha=2, 
+                       corr.strength=5, g=2, Sigma.eps=0.1, 
+                       nc=2000, ne=1000, intercept=TRUE, check=TRUE)
+print(Ydep)
+@
+\bioccomment{Note that \Rcode{bWX} refers to the average correlation between the columns of $X$ and $W$.}
+
+\section{Appication of global removal of unwanted variation}
+RUV is a data-driven method that removes systematic noise from gene expression datasets. The particular version of RUV is dependent on the goal of the analysis. We have developed a method, \Rfunction{RUVNaiveRidge}, for the removal of unwanted variation that focuses on retrieving the true underlying gene-gene correlations, but at the cost of the specification of the absolute values of gene expression (paper in preparation).The application of \Rfunction{RUVNaiveRidge}
+requires the analyst to make several descisions, which should be informed by the ultimate research goal. Here we will demonstrate some of the 
+principles using a dataset on gene expression in 57 samples from the bladder as described in Dyrskjot et al \cite{dyrskjot2004}. The dataset can be found in the Bioconductor package \Biocexptpkg{bladderbatch}. Note that this dataset is small and co-expression analysis should ideally be performed on studies with at least 100 samples.
+
+\subsection{Investigating the dataset design and getting data into the correct format}
+For the application of \Rfunction{RUVNaiveRidge} it is important to be familar with the experiment design of the dataset. If the accompanying metadata of the samples is available
+the experiment design can be visualized using the function \Rfunction{plotDesign}.
+
+<<design, fig.show='hide', fig.width=10, fig.height=6, results='hide'>>=
+library(bladderbatch)
+data(bladderdata)
+expr.meta <- pData(bladderEset)
+plotDesign(expr.meta, c("cancer", "outcome", "batch"), 
+           c("Diagnosis", "Outcome", "Batch"), orderby="batch")
+@
+
+\incfig{figure/design-1}{1\textwidth}{Experimental design of the gene expression dataset of Dyrskjot et al.}
+{Every line in each of the bars represents a sample, which is colored according to the factor displayed on the left-hand side. The samples
+in each bar are in the same order.}
+
+Figure \ref{figure/design-1} illustrates that batches, diagnosis and eventual outcome were substantially confounded; ie. not all
+factors could be fully randomized. Thus, it is likely that the data contains some systematic noise.
+
+The gene expression data needs to be a matrix with its columns containing the genes and its rows containing the samples.
+<<>>=
+expr <- exprs(bladderEset)
+expr[1:5,1:5]
+dim(expr)
+expr <- t(expr)
+expr <- expr[,1:20000]
+
+library(hgu133a2.db)
+x <- hgu133a2SYMBOL
+xx <- as.list(x[colnames(expr)])
+@
+
+\subsection{Selecting negative control genes}
+Ideally, negative control genes should be selected with the help of \emph{a priori} information. Unfortunately, when the aim is estimating gene coexpression and 
+the factor of interest is unknown, a suitable set of negative control genes is seldomly known. Because of this it is advisable to choose negative control genes 
+empirically. Using the \Rpackage{RUVcorr} package this can be accomplished using the function \Rfunction{empNegativeControls}. Note that it is necessary to exclude the genes that pertain to 
+your research question from being selected as negative controls. For demonstration purposes let us assume we are interested in the following 10 random genes: 
+<<>>=
+na_genes <- c("SCN1A", "SCN3A", "SCN4A", "SCN5A", "SCN7A", "SCN8A", "SCN11A",
+            "SCN1B", "SCN2B", "SCN3B", "SCN4B")
+@
+Since the genes in the dataset is uing Affymetrix identifiers, we have to find the corresponding Affymetrix probe names for our genes of interest.
+<<>>=
+na_affy <- names(which(unlist(lapply(xx, function(x) is.element(x, na_genes)[1]))))
+na_index <- which(is.element(colnames(expr),na_affy))
+nc_index <- empNegativeControls(expr, exclude=na_index, nc=3000)
+@
+
+Usefully, the selection can also be visualized (see Figure \ref{figure/genePlot-1}):
+<<genePlot, fig.show='hide', fig.width=10, fig.height=6, results='hide'>>=
+genePlot(expr, index=nc_index, 
+         legend="Negative Control Genes", title="IQR-Mean Plot")
+@
+
+\incfig{figure/genePlot-1}{1\textwidth}{Inter-quantile range vs.\ mean plot of the expression of all genes.}
+{The genes highlighted in red are the empirically chosen negative control genes.}
+
+\subsection{Effective application of \Rfunction{RUVNaiveRidge}}
+Besides negative control genes the application of \Rfunction{RUVNaiveRidge} also requires the input of two user-selected parameters, the ridge parameter $\nu$ and the dimensionality of $\hat{W}$, $\hat{k}$. Since these parameters determine the strength of the cleaning, the user is adviced to carefully assess her choices. It is recommended to run \Rfunction{RUVRidgeNaive} with several different choices of the parameters and then assess the results. In order to do this efficiently it is advisable to \Rfunction{RUVNaiveRidge} in parallel. This can be achieved with a package such as \CRANpkg{snowfall}.
+<<warning=FALSE>>=
+library(snowfall)
+k <- c(1,2,3,4)
+nu <- c(0,500,1000,5000)
+k.nu.matrix <- cbind(rep(k, each=4), rep(nu, 4))
+k.nu.matrix <- as.list(as.data.frame(t(k.nu.matrix)))
+
+sfInit(parallel=TRUE, cpus=4)
+sfLibrary(RUVcorr)
+sfExport("expr", "k.nu.matrix", "nc_index")
+expr_AllRUV <- sfLapply(k.nu.matrix, function(x)
+  RUVNaiveRidge(expr, center=TRUE, nc_index, x[2], x[1]))
+sfStop()
+@
+
+\subsection{Plotting options to help make parameter choices}
+Choosing the parameter values is not always easy and there might be more than one possible choice. It is therefore vital to thoroughly investigate different combinations of parameter choices using genes that are \emph{a priori} known to be uncorrelated with each other and \emph{a priori} known to be correlated, also referred to as positive controls. Here, we will use the sodium channel genes as positive controls, because we expect some of these genes to be correlated with each other.
+<<histogramPlotNA, fig.show='hide', fig.width=10, fig.height=10, results='hide', warning=FALSE>>=
+cor_AllRUV_na <- lapply(expr_AllRUV, function(x) cor(x[,na_index]))
+cor_Raw_na <- cor(expr[,na_index])
+                      
+par(mfrow=c(2,2))
+lapply(1:4, function(i) histogramPlot(cor_AllRUV_na[seq(0,15,4)+i], cor_Raw_na,
+                                      title=paste("nu=", nu[i]), 
+                                      legend=c(paste("k=", k), "Raw")))
+@
+For the set of uncorrelated genes, the negative control genes cannot be used. This is because negative controls used during RUV will have zero correlation by definition. A good choice for a set of uncorrelated genes is a set of random genes. Picking these can be accomplished using the function \Rfunction{background}.  
+
+<<histogramPlotBG, fig.show='hide', fig.width=10, fig.height=10, results='hide', warning=FALSE>>=
+bg_index <- background(expr, nBG=100, exclude=na_index, nc_index=nc_index)
+
+cor_AllRUV_bg <- lapply(expr_AllRUV, function(x) cor(x[,bg_index]))
+cor_Raw_bg <- cor(expr[,bg_index])
+                      
+par(mfrow=c(2,2))
+lapply(1:4, function(i) histogramPlot(cor_AllRUV_bg[seq(0,15,4)+i], cor_Raw_bg,
+                                      title=paste("nu=", nu[i]), 
+                                      legend=c(paste("k=", k), "Raw")))
+@
+
+\incfig{figure/histogramPlotNA-1}{1\textwidth}{Impact of different parameter choices on the correlations of a set of sodium channel genes.}
+{Correlation densities for different parameter choices. The histogram in the background of each panel shows the denisty of the correlations of the random genes calculated using the raw data.}
+
+\incfig{figure/histogramPlotBG-1}{1\textwidth}{Impact of different parameter choices on the correlations of a set of random genes.}
+{Correlation densities for different parameter choices. The histogram in the background of each panel shows the denisty of the correlations of the random genes calculated using the raw data.}
+
+From Figures \ref{figure/histogramPlotNA-1} and \ref{figure/histogramPlotBG-1} it seems a choice of $\hat{k}=2$ corrects the 
+wide range of the distribution of the correlations between random genes, but leaves some interesting non-zero correlations for the sodium-channel genes. Other plots that are informative for the choise of $k$ include the \Rfunction{eigenvaluePlot}. The choice for the correct $\nu$ however remains difficult because of the little change in the overall results. Further assessments are required. 
+
+Besides looking at histogram plots studying relative log expression (RLE) plots is useful. Specifically, parameter choices that overcorrect the data can be spotted. Such parameter choices will have gene expression variances that are too low. The RLE plots offered differ from the originally proposed RLE plot by combining all samples and are suited to large ($>100$ arrays) gene expression data sets where visualisation of individual arrays becomes impractical. The option displayed here shows the boxplots for the 1st and 3rd quantile of the difference between the gene expression and the study median for all samples (compare Figure \ref{figure/RLEplot1-1}). 
+
+<<RLEplot1, fig.show='hide', fig.width=10, fig.height=10, results='hide', warning=FALSE>>=
+par(mfrow=c(2,2))
+lapply(1:4, function(i) RLEPlot(expr, expr_AllRUV[[4+i]], 
+                                name=c("Raw", "RUV"), title=paste("nu=", nu[i]),
+                                method="IQR.boxplots"))
+@
+\incfig{figure/RLEplot1-1}{1\textwidth}{RLE plots comparing different options of $\nu$ for $\hat{k}=3$.}
+{The boxplots summarize the 25\% and 75\% quantile of all samples. The red boxplots display the raw data, while the black boxplots refer to the RUV applied with $\hat{k}=2$ and $\nu$ as in the title of the panel.}
+
+A parameter choice of $\nu=500$ seems to offer the best choice. In order to check whether the selected parameter at least removes all the known sources of variation, there is yet another version of the RLE plot. Here we plot the median and the inter-quantile-range (IQR) of the difference between the gene expression and the study median for all samples. Furthermore, it is useful to color these plots according to a known source of unwanted variation, such as batches (see Figure \ref{figure/RLEplot2-1}).
+
+<<RLEplot2, fig.show='hide', fig.width=10, fig.height=5, results='hide', warning=FALSE>>=
+par(mfrow=c(1,1))
+RLEPlot(expr, expr_AllRUV[[6]], name=c("Raw", "RUV"), 
+        title="Batches", method="IQR.points", anno=expr.meta, 
+        Factor="batch", numeric=TRUE)
+@
+
+\incfig{figure/RLEplot2-1}{1\textwidth}{RLE plots for data cleaned with RUV using $\nu=500$ for $\hat{k}=2$.}
+{Every sample is represented by the median and inter-quantile-range of the difference between observed gene expressions and study mean. The samples are colored according to their batches.} 
+
+\bioccomment{Principal component plots (\Rfunction{PCAPlot}) provide a similar way of assessing parameter choices for RUV.}  
+
+Figure \ref{figure/RLEplot2-1} demonstrates that at least most of the systematic noise introduced via the batch effect has been removed. Hence, it is now possible to examine gene-gene correlations, construct gene networks or else using this new dataset. 
+<<>>=
+CleanData <- expr_AllRUV[[6]]
+@
+
+
+\section{Gene prioritization}
+One of the methods that can be applied given a cleaned version of the dataset is gene prioritization. Gene prioritization identifies candidate genes that are likely to be involved in the same biological pathways or related pathways than a set of known genes. The gene prioritization method in this package is very similar to the approach described in the paper by Oliver et al \cite{Oliver}. For demonstration purposes assume that the following genes involved in the synaptic vesicle cycle are in fact candidates: 
+<<>>=
+cand_genes <- c("CACNA1A", "CACNA1B", "SNAP25", "STX1A")
+cand_affy <- names(which(unlist(lapply(xx, function(x) is.element(x, cand_genes)[1]))))
+cand_index <- which(is.element(colnames(CleanData),cand_affy))
+@
+
+\subsection{Finding the correlation threshold of significant co-expression}
+In order to prioritize genes, typically a correlation threshold is determined. The absolute values of correlations between genes that exceed this threshold are considered to be truly co-expressed. Here, we use a threshold that corresponds to an empirical false discovery rate (EDFR) of 0.3. However, this requires the estimation of EDFR for all possible thresholds. This can be achieved using the function \Rfunction{calculateEFDR}: 
+<<>>=
+efdr <- calculateEFDR(CleanData, exclude=c(nc_index, cand_index), 
+                      index.ref=na_index, set.size=length(cand_index), 
+                      Weight=NULL)
+threshold <- predict(efdr$loess.estimate, 0.3)
+threshold
+@
+\bioccomment{It is important to exclude genes that could bias the estimation of the EFDR.}
+
+The EFDR can also be visualized using (see Figure \ref{figure/EFDR-1}):
+<<EFDR, fig.show='hide', fig.width=10, fig.height=6, results='hide', warning=FALSE>>=
+plotEFDR(efdr)
+@
+
+\incfig{figure/EFDR-1}{1\textwidth}{EFDR for every possible threshold.}
+
+\subsection{Prioritizing candidate genes}
+Having determined the threshold we can use the function \Rfunction{prioritise} in order to establish whish candidates are also likely to be involved in the sodium-channel:
+<<>>=
+prior<-prioritise(CleanData, na_index, cand_index, Weight=NULL, threshold=threshold)
+print(prior)
+xx[which(is.element(names(xx), prior[,1]))]
+@
+This analysis prioritizes SNAP25 and CACNA1A.
+
+%---------------------------------------------------------
+\section{Session info}
+%---------------------------------------------------------
+Here is the output of \Rfunction{sessionInfo} on the system on which
+this document was compiled:
+<<sessionInfo, results = 'asis', eval = TRUE, echo = TRUE>>=
+toLatex(sessionInfo())
+@
+
+\bibliography{Bioc}
+
+
+
+\end{document}
