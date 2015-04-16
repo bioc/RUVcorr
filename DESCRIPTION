@@ -2,7 +2,7 @@ Package: RUVcorr
 Type: Package
 Title: Removal of unwanted variation for gene-gene correlations and
         related analysis
-Version: 0.99.1
+Version: 1.0.0
 Date: 2015-01-04
 Author: Saskia Freytag
 Maintainer: Saskia Freytag <freytag.s@wehi.edu.au>
