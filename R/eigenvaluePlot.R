@@ -1,6 +1,6 @@
 #' Plot eigenvalues of SVD of the negtaive controls.
 #'
-#' \code{eigenvaluePlot} plots the ratio of the i$^{th}$ eigenvalue 
+#' \code{eigenvaluePlot} plots the ratio of the ith eigenvalue 
 #' of the SVD of the negative controls to the eigenvalue total.
 #'
 #' @param Y A matrix of gene expressions.
@@ -16,7 +16,6 @@
 #' eigenvaluePlot(Y$Y, nc_index=251:500, k=20, center=TRUE)
 #' @author Saskia Freytag
 #' @export
-
 eigenvaluePlot<-function(Y, nc_index, k=10, center=TRUE, title="Eigenvalue Plot"){
   Yc<-Y[, nc_index]
   Yc<-scale(Yc, center=TRUE, scale=FALSE)

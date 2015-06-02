@@ -1,12 +1,12 @@
 #' Removal of unwanted variation for gene correlations.
 #' 
 #' \code{RUVNaiveRidge} applies the ridged version of global removal of unwanted variation 
-#' 	to simulated or real gene expression data. 
+#' to simulated or real gene expression data. 
 #'
 #' @param Y A matrix of gene expression values or an object of 
 #' class \code{simulateGEdata}. 
 #' @param center A logical scalar; if \code{TRUE} the data is centered, 
-#'	if \code{FALSE} data is assumed to be already centered.
+#' if \code{FALSE} data is assumed to be already centered.
 #' @param nc_index A vector of indices of negative controls.
 #' @param nu A numeric scalar value of \code{nu} \eqn{\geq 0}.
 #' @param kW An integer setting the number of dimensions for the estimated noise.
@@ -28,10 +28,10 @@
 #' Y.hat<-RUVNaiveRidge(Y, center=FALSE, nc_index=251:500, 0, 10, check.input=TRUE)
 #' cor(Y.hat[,1:5])
 #' Y$Sigma[1:5,1:5]
-#' @references Jacbo L., Gagnon-Bartsch J., Speed T. Correcting gene expression 
+#' @references Jacob L., Gagnon-Bartsch J., Speed T. Correcting gene expression 
 #'   data when neither the unwanted variation nor the factor of interest are observed. 
 #'   Berkley Technical Reports (2012).
-#' @author Saskia Freytag, Laurent Jacobs
+#' @author Saskia Freytag, Laurent Jacob
 #' @exportMethod RUVNaiveRidge
 #' @export
 RUVNaiveRidge<-function(

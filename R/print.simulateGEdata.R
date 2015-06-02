@@ -10,7 +10,7 @@
 #' @examples
 #' \donttest{
 #' Y<-simulateGEdata(500, 500, 10, 2, 5, g=NULL, Sigma.eps=0.1, 
-#' 250, 100, intrecept=TRUE, check.input=FALSE)
+#' 250, 100, intercept=TRUE, check.input=FALSE)
 #' Y
 #' }
 #' @export

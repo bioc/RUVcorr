@@ -209,8 +209,8 @@ CleanData <- expr_AllRUV[[6]]
 @
 
 
-\section{Gene prioritization}
-One of the methods that can be applied given a cleaned version of the dataset is gene prioritization. Gene prioritization identifies candidate genes that are likely to be involved in the same biological pathways or related pathways than a set of known genes. The gene prioritization method in this package is very similar to the approach described in the paper by Oliver et al \cite{Oliver}. For demonstration purposes assume that the following genes involved in the synaptic vesicle cycle are in fact candidates: 
+\section{Gene prioritisation}
+One of the methods that can be applied given a cleaned version of the dataset is gene prioritisation. Gene prioritisation identifies candidate genes that are likely to be involved in the same biological pathways or related pathways than a set of known genes. The gene prioritisation method in this package is very similar to the approach described in the paper by Oliver et al \cite{Oliver}. For demonstration purposes assume that the following genes involved in the synaptic vesicle cycle are in fact candidates: 
 <<>>=
 cand_genes <- c("CACNA1A", "CACNA1B", "SNAP25", "STX1A")
 cand_affy <- names(which(unlist(lapply(xx, function(x) is.element(x, cand_genes)[1]))))
@@ -218,31 +218,31 @@ cand_index <- which(is.element(colnames(CleanData),cand_affy))
 @
 
 \subsection{Finding the correlation threshold of significant co-expression}
-In order to prioritize genes, typically a correlation threshold is determined. The absolute values of correlations between genes that exceed this threshold are considered to be truly co-expressed. Here, we use a threshold that corresponds to an empirical false discovery rate (EDFR) of 0.3. However, this requires the estimation of EDFR for all possible thresholds. This can be achieved using the function \Rfunction{calculateEFDR}: 
+In order to prioritise genes, typically a correlation threshold is determined. The absolute values of correlations between genes that exceed this threshold are considered to be truly co-expressed. Here, we use a threshold that corresponds to a proportion of prioritised random genes of 0.3. However, this requires extensive estimation for all possible thresholds. This can be achieved using the function \Rfunction{calculateThreshold}: 
 <<>>=
-efdr <- calculateEFDR(CleanData, exclude=c(nc_index, cand_index), 
+Prop <- calculateThreshold(CleanData, exclude=c(nc_index, cand_index), 
                       index.ref=na_index, set.size=length(cand_index), 
-                      Weight=NULL)
-threshold <- predict(efdr$loess.estimate, 0.3)
+                      Weights=NULL)
+threshold <- predict(Prop$loess.estimate, 0.3)
 threshold
 @
-\bioccomment{It is important to exclude genes that could bias the estimation of the EFDR.}
+\bioccomment{It is important to exclude genes that could bias the estimation of the proportion of prioritised genes.}
 
-The EFDR can also be visualized using (see Figure \ref{figure/EFDR-1}):
+Thresholds can also be visualized using (see Figure \ref{figure/EFDR-1}):
 <<EFDR, fig.show='hide', fig.width=10, fig.height=6, results='hide', warning=FALSE>>=
-plotEFDR(efdr)
+plotThreshold(Prop)
 @
 
-\incfig{figure/EFDR-1}{1\textwidth}{EFDR for every possible threshold.}
+\incfig{figure/EFDR-1}{1\textwidth}{Proportion of prioritised random genes for every possible threshold.}
 
-\subsection{Prioritizing candidate genes}
-Having determined the threshold we can use the function \Rfunction{prioritise} in order to establish whish candidates are also likely to be involved in the sodium-channel:
+\subsection{Prioritising candidate genes}
+Having determined the threshold we can use the function \Rfunction{prioritise} in order to establish which candidates are also likely to be involved in the sodium-channel:
 <<>>=
 prior<-prioritise(CleanData, na_index, cand_index, Weight=NULL, threshold=threshold)
 print(prior)
 xx[which(is.element(names(xx), prior[,1]))]
 @
-This analysis prioritizes SNAP25 and CACNA1A.
+This analysis prioritises SNAP25 and CACNA1A.
 
 %---------------------------------------------------------
 \section{Session info}

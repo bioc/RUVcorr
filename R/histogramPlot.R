@@ -1,7 +1,7 @@
 #' Plot histogram of correlations.
 #'
 #' \code{histogramPlot} plots histograms of correlation values in expression data and
-#'	its reference.
+#' its reference.
 #'
 #' @param X A matrix or a list of matrices of estimated gene-gene correlations.
 #' @param Y A matrix of reference gene-gene correlations (i.e. known underlying correlation structure).

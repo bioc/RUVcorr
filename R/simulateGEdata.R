@@ -56,7 +56,7 @@
 #' Y<-simulateGEdata(500, 500, 10, 2, 5, g=3, Sigma.eps=0.1, 
 #' 250, 100, intercept=TRUE, check.input=TRUE)
 #' Y
-#' @references Jacbo L., Gagnon-Bartsch J., Speed T. Correcting gene expression 
+#' @references Jacob L., Gagnon-Bartsch J., Speed T. Correcting gene expression 
 #'   data when neither the unwanted variation nor the factor of interest are observed. 
 #'   Berkley Technical Reports (2012).
 #' @author Saskia Freytag, Johann Gagnon-Bartsch 

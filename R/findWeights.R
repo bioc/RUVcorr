@@ -30,6 +30,7 @@
 #' colnames(anno)<-"Factor"
 #' findWeights(Y$Y, anno, "Factor")
 #' @author Saskia Freytag
+#' @exportClass Weights
 #' @export
 findWeights<-function(X, 
       anno, 

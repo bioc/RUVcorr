@@ -43,12 +43,12 @@ PCAPlot<-function(
     if(class(Y)!="prcomp"){
       if(dim(anno)[1]!=dim(Y)[1]) stop("Annotation does not match.")
     } else {
-      if(dim(anno)[1]!=dim(Y$rotation)[1]) stop("Annotation does not match.")
+      if(dim(anno)[1]!=dim(Y$x)[1]) stop("Annotation does not match.")
     }
   }
   
   if(class(Y)!="prcomp"){
-    pc<-prcomp(t(Y), center=TRUE)
+    pc<-prcomp(Y, center=TRUE)
   } else{
     pc<-Y
   }
@@ -57,7 +57,7 @@ PCAPlot<-function(
   
   if(is.null(anno)==FALSE){
     category<-cbind(as.matrix(as.character(anno[, which(colnames(anno)==Factor)])), 
-    1:dim(pc$rotation)[1])
+    1:dim(pc$x)[1])
     colnames(category)<-c("x", "ord")
     n.category<-length(unique(anno[, which(colnames(anno)==Factor)]))
     
@@ -83,7 +83,7 @@ PCAPlot<-function(
       legend("topleft", legend=new.legend, col=colour.code[, 2], 
       ncol=1, bty="n", pch=16, cex=0.75)
     }
-    plot(pc$rotation[, comp[1]], pc$rotation[, comp[2]], col=as.character(new.colours), 
+    plot(pc$x[, comp[1]], pc$x[, comp[2]], col=as.character(new.colours), 
     xlab=paste("PC", comp[1]), ylab=paste("PC", comp[2]), bty="l")
     mtext(text=paste(title), outer=TRUE, side=3, line=-1.5, font=2, cex=1.25)	
     mtext(paste("St. Dev PC", comp[1], "=", round(pc$sdev[comp[1]], 2), 
@@ -92,7 +92,7 @@ PCAPlot<-function(
   }
   
   if(is.null(anno)){
-    plot(pc$rotation[, comp[1]],  pc$rotation[, comp[2]], xlab=paste("PC", comp[1]),
+    plot(pc$x[, comp[1]],  pc$x[, comp[2]], xlab=paste("PC", comp[1]),
     ylab=paste("PC", comp[2]), bty="l")
     mtext(text=paste(title), outer=TRUE, side=3, line=-2, font=2, cex=1.25)
     mtext(paste("St. Dev PC", comp[1], "=", round(pc$sdev[comp[1]],2), " St. Dev PC", 

@@ -5,7 +5,8 @@
 #'
 #' @param true A matrix of true gene-gene correlation values.
 #' @param est A matrix of estimated gene expression values.
-#' @param plot.genes A vector of indices of genes used in plotting; the suggested length of this vector is 18.
+#' @param plot.genes A vector of indices of genes used in plotting; 
+#' the suggested length of this vector is 18.
 #' @param boxes A logical scalar to indicate whether boxes 
 #' are drawn around sets of 6 genes; only available if \code{plot.genes} has length 18.
 #' @param title A character string describing the title of the plot.

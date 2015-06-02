@@ -38,5 +38,5 @@ genePlot<-function(
   }
   if(is.null(legend)==FALSE){
     legend("topright", legend=legend, text.col=c(col.h), bty="n")
-  }		
+  }
 }

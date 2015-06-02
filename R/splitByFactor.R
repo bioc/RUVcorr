@@ -4,7 +4,8 @@
 #' 
 #' @param X  A matrix containing gene expressions.
 #' @param anno A dataframe or a matrix containing the annotation of arrays in \code{X}.
-#' @param Factor A character string corresponding to a column name of \code{anno} to be used for splitting. 
+#' @param Factor A character string corresponding to a column name of 
+#' \code{anno} to be used for splitting. 
 #' @return \code{splitByFactor} returns a list object.
 #' @keywords internal
 #' @author Saskia Freytag

@@ -3,7 +3,8 @@
 #' \code{is.optimizeParameters} checks if object is of \code{optimizeParameters} class.
 #'
 #' @param x An object.
-#' @return \code{is.optimizeParameters} returns a logical scalar; \code{TRUE} if the object is of the class \code{optimizeParameters}.
+#' @return \code{is.optimizeParameters} returns a logical scalar; 
+#' \code{TRUE} if the object is of the class \code{optimizeParameters}.
 #' @examples
 #' \donttest{
 #' Y<-simulateGEdata(500, 500, 10, 2, 5, g=NULL, Sigma.eps=0.1, 

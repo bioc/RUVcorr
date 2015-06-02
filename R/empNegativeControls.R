@@ -27,6 +27,7 @@
 #' restrict the empirical
 #' choice to the known negative controls by excluding all other genes.
 #' @author Saskia Freytag
+#' @exportMethod empNegativeControls
 #' @export
 empNegativeControls<-function(Y, ##matrix of expression data
       exclude, ##index of genes to be excluded from negative controls

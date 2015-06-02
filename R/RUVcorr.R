@@ -1,7 +1,7 @@
 #' Removal of unwanted variation for gene-gene correlations.
 #'
 #' \pkg{RUVcorr} allows to apply global removal of 
-#' unwanted variation (ridged version) to real and simulated gene expression data. 
+#' unwanted variation (ridged version of RUV) to real and simulated gene expression data. 
 #'
 #' @details
 #' All gene expression data are assumed to be in the following format:
