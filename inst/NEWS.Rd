@@ -15,8 +15,6 @@ as function plotEFDR into plotThreshold.
 \item Renamed and restructured class EFDR, now named Threshold.
 \item Added an option to parallelize computations in calculateThreshold. 
 }}
-\section{Version 1.1.1}{\itemize{
+\section{Version 2.1.0}{\itemize{
 \item Changed class calling.
-\item New vignette.
-}}
-
+\item New vignette.}}

@@ -70,11 +70,7 @@ calculateThreshold<-function(X,
   all.genes<-setdiff(seq_len(dim(X)[2]), c(exclude,index.ref))
   genes<-lapply(seq_len(1000), function(x) c(index.ref, sample(all.genes, set.size)))
   names(genes)<-seq_len(1000)
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 7790771... chnages to make work on R 4.0
   if(parallel){
     multicoreParam <- MulticoreParam(workers = cpus)
     res<-bplapply(genes, funcThresh, BPPARAM = multicoreParam, Y=X, 
