@@ -50,14 +50,14 @@ plotDesign<-function(
   
   par(mfrow=c(dim(anno)[2], 1), mar=c(1, 2, 0.5, 1), mgp=c(0.5, 1, 0))
   
-  for(i in 1:length(anno.names)){
+  for(i in seq_len(length(anno.names))){
     x<-anno[, i]
     x.name<-anno.names[i]
     x<-as.numeric(as.factor(x))
     n.category<-length(unique(x))
-    colors<-hcl(h = seq(0, 360, round(360/n.category, 2))[1:n.category], c=45, l=70)
+    colors<-hcl(h = seq(0, 360, round(360/n.category, 2))[seq_len(n.category)], c=45, l=70)
     
-    image(seq(0,a*0.1, 0.1)[1:a], y=1, as.matrix(x), col=colors,
+    image(seq(0,a*0.1, 0.1)[seq_len(a)], y=1, as.matrix(x), col=colors,
     axes=FALSE, ylab=paste(x.name), xlab="", cex=3)
   }
   

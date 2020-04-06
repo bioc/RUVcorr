@@ -23,9 +23,9 @@ background<-function(Y,
       exclude,
       nc_index){
   
-  if(is.simulateGEdata(Y)){
+  if(is.simulateGEdata(Y)[[1]]){
     Y<-Y$Y
-    colnames(Y)<-1:dim(Y)[2]	
+    colnames(Y)<-seq_len(dim(Y)[2])	
   }	
   Ytmp<-Y[,-c(exclude,nc_index)]
   

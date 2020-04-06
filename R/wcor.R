@@ -26,7 +26,7 @@ wcor<-function(
       Weights)
 {
   
-  if(is.Weights(Weights)) Weights<-Weights$Weights
+  if(is.Weights(Weights)[[1]]) Weights<-Weights$Weights
 
   if(any(colnames(anno)==Factor)==FALSE){ 
     stop("Factor has to be a column of anno.")

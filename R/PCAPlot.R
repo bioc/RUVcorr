@@ -13,6 +13,19 @@
 #' labels in \code{Factor} are used. 
 #' @param title A character string giving the title. 
 #' @return \code{PCAPlot} returns a plot.
+#' @importFrom graphics abline
+#' @importFrom graphics boxplot
+#' @importFrom graphics hist
+#' @importFrom graphics image
+#' @importFrom graphics layout
+#' @importFrom graphics legend
+#' @importFrom graphics lines
+#' @importFrom graphics mtext
+#' @importFrom graphics par
+#' @importFrom graphics plot
+#' @importFrom graphics plot.new
+#' @importFrom graphics points
+#' @importFrom graphics rect
 #' @examples
 #' Y<-simulateGEdata(500, 500, 10, 2, 5, g=NULL, Sigma.eps=0.1, 
 #' 250, 100, intercept=FALSE, check.input=FALSE)
@@ -54,14 +67,14 @@ PCAPlot<-function(
   if(any(is.null(Factor)|is.null(anno))==FALSE){
     if(is.null(anno)|is.null(Factor)) stop("Both anno and factor have to be specified.")
     if(any(colnames(anno)==Factor)==FALSE) stop("Factor has to be a column of anno.")
-    if(class(Y)!="prcomp"){
+    if(class(Y)[[1]]!="prcomp"){
       if(dim(anno)[1]!=dim(Y)[1]) stop("Annotation does not match.")
     } else {
       if(dim(anno)[1]!=dim(Y$x)[1]) stop("Annotation does not match.")
     }
   }
   
-  if(class(Y)!="prcomp"){
+  if(class(Y)[[1]]!="prcomp"){
     pc<-prcomp(Y, center=TRUE)
   } else{
     pc<-Y
@@ -71,17 +84,17 @@ PCAPlot<-function(
   
   if(is.null(anno)==FALSE){
     category<-cbind(as.matrix(as.character(anno[, which(colnames(anno)==Factor)])), 
-    1:dim(pc$x)[1])
+    seq_len(dim(pc$x)[1]))
     colnames(category)<-c("x", "ord")
     n.category<-length(unique(anno[, which(colnames(anno)==Factor)]))
     
     colours<-hcl(h = seq(0,360, round(360/n.category, 2)), c=45, l=70)
     if (numeric==TRUE){
       colour.code<-cbind(unique(as.character(category[, 1]))[order(
-      unique(as.numeric(category[, 1])))], colours[1:n.category])
+      unique(as.numeric(category[, 1])))], colours[seq_len(n.category)])
      } else {
        colour.code<-cbind(sort(unique(as.character(category[,1])), na.last=TRUE), 
-       colours[1:n.category])
+       colours[seq_len(n.category)])
     }
     colnames(colour.code)<-c("x", "colour")
     new.colours<-merge(category, colour.code, by="x")

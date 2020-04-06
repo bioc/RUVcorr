@@ -99,17 +99,17 @@ RLEPlot<-function(
     
     if((is.null(anno)|is.null(factor))==FALSE){
       category<-as.matrix(as.character(anno[, which(colnames(anno)==Factor)]))
-      category<-cbind(category, 1:length(category))
+      category<-cbind(category, seq_len(length(category)))
       colnames(category)<-c("x", "Ind")
       n.category<-length(unique(anno[, which(colnames(anno)==Factor)]))
       
       colours<-hcl(h = seq(0, 360,round(360/n.category, 2)), c=45, l=70)
       if (numeric==TRUE){
         colour.code<-cbind(unique(as.character(
-        category[, 1]))[order(unique(as.numeric(category[, 1])))], colours[1:n.category])
+          category[, 1]))[order(unique(as.numeric(category[, 1])))], 
+          colours[seq_len(n.category)])
       } else {colour.code<-cbind(sort(unique(as.character(category[,1])), 
-      na.last=TRUE), colours[1:n.category])}
-
+      na.last=TRUE), colours[seq_len(n.category)])}
       colnames(colour.code)<-c("x", "colour")
       new.colours<-merge(category, colour.code, by="x")
       new.colours<-new.colours[order(as.numeric

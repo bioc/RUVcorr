@@ -13,6 +13,16 @@
 #' @param legend A vector describing \code{X} and \code{Y}.
 #' @return \code{ECDFPlot} returns a plot.
 #'
+#' @importFrom stats cor
+#' @importFrom stats density
+#' @importFrom stats loess
+#' @importFrom stats median
+#' @importFrom stats prcomp
+#' @importFrom stats rnorm
+#' @importFrom stats runif
+#' @importFrom stats var
+#' @importFrom stats xtabs
+#'
 #' @examples
 #' Y<-simulateGEdata(500, 500, 10, 2, 5, g=NULL, Sigma.eps=0.1, 
 #' 250, 100, intercept=FALSE, check.input=FALSE)
@@ -23,6 +33,7 @@
 #' legend=c("RUV", "Truth"))
 #' ECDFPlot(list(Y.hat.cor, cor(Y$Y)), Y$Sigma, index=1:100, 
 #' title="Simulated data", legend=c("RUV", "Raw", "Truth"), col.Y="black")
+#'
 #' @author Saskia Freytag
 #' @export
 ECDFPlot<-function(
@@ -36,7 +47,7 @@ ECDFPlot<-function(
 ){ 
   
   if(is.matrix(X)[[1]]){
-
+    
     if(index[1]!="all"){
       X<-X[index, index]
       Y<-Y[index, index]
@@ -56,11 +67,11 @@ ECDFPlot<-function(
     bty="n", lty=1, lwd=3, cex=0.95)
   }
   
-  if(class(X)=="list"){
-    if(index[1]!="all"){
-      X<-lapply(X, function(x) x[index, index])
-      Y<-Y[index, index]
-    }
+  if(is.list(X)[[1]]){
+      if(index[1]!="all"){
+          X<-lapply(X, function(x) x[index, index])
+          Y<-Y[index, index]
+      }
     
     X<-lapply(X, function(x) x[lower.tri(x)])
     Y<-Y[lower.tri(Y)]
@@ -71,12 +82,12 @@ ECDFPlot<-function(
     if(length(col.X)!=length(X)){
       warning("Specified colors are no longer valid.")
       
-      col.X<-hcl(h = seq(0, 360, round(360/length(X), 2)), c=45, l=70)[1:length(X)]
+      col.X<-hcl(h = seq(0, 360, round(360/length(X), 2)), c=45, l=70)[seq_len(length(X))]
     }
     plot(ECDF.Y, xlim=c(0, 1), ylim=c(0, 1), col=col.Y, 
     xlab="|Correlation|", ylab="Proportion of |Correlation|", lwd=2,
     main=paste(title), verticals=TRUE, do.p=FALSE, bty="l")
-    
+
     for (i in seq_len(length(X))){
       lines(ECDF.X[[i]], col=col.X[i], lwd=2, verticals=TRUE, do.p=FALSE)
     }

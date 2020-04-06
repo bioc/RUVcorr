@@ -23,3 +23,20 @@ is.optimizeParameters<-function(
   
   return(class(x)=="optimizeParameters")
 }
+
+#' Checking \code{Threshold} class.
+#'
+#' \code{is.Threshold} checks if object is of \code{Threshold} class.
+#'
+#' @param x An object.
+#' @return \code{is.Threshold} returns a logical scalar; 
+#' \code{TRUE} if the object is of the class \code{Threshold}.
+#' @seealso \code{\link{calculateThreshold}}
+#' @author Saskia Freytag
+#' @export
+is.Threshold<-function(
+  x ##object
+){
+  
+  return(class(x)=="Threshold")
+}

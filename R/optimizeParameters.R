@@ -51,34 +51,35 @@ optimizeParameters<-function(
 {
   
   if(check.input){
-    if(is.simulateGEdata(Y)==FALSE) stop("Y has to be of the class simulateGEdata.")
+    if(is.simulateGEdata(Y)[[1]]==FALSE) stop("Y has to be of the class simulateGEdata.")
     if(any(c(kW.hat,nu.hat)<0)) stop("All parameters have to be greater tor equal to 0.")
   }
   
   kW.nu.matrix<-cbind(rep(kW.hat,length=length(nu.hat)*length(kW.hat)),
   rep(nu.hat, each=length(kW.hat)))
   kW.nu.list<-as.list(as.data.frame(t(kW.nu.matrix)))
-  index<-1:(dim(Y$Y)[2]-length(nc_index))
+  index<-seq_len(dim(Y$Y)[2]-length(nc_index))
   
   if(parallel){
     multicoreParam <- MulticoreParam(workers = cpus)
     res1<-bplapply(kW.nu.list, funcPara, BPPARAM = multicoreParam, Y=Y, 
     nc_index=nc_index, center=TRUE, index=index, methods=methods)
     if(length(methods)==2|any(methods=="all")){
-    res<-rbind(sapply(res1, function(x) x[1]), sapply(res1, function(x) x[2]))
+    res<-rbind(vapply(res1, function(x) x[1], double(1)), 
+               vapply(res1, function(x) x[2], double(1)))
     } else {
       res<-as.vector(unlist(res1))
     }
   } else {
     Y.hat<-lapply(kW.nu.list, function(x) RUVNaiveRidge(Y, nc_index, 
     center=TRUE, x[2], x[1], check.input=FALSE))
-    res<-sapply(Y.hat, function(x) assessQuality(x, Y$Sigma, index=index, 
-    methods=methods))
+    res<-vapply(Y.hat, function(x) assessQuality(x, Y$Sigma, index=index, 
+    methods=methods), double(length(methods)))
   }
   
   if(length(methods)==2|any(methods=="all")){
     res<-cbind(kW.nu.matrix, t(res))
-    colnames(res)[1:2]<-c("kW", "nu")
+    colnames(res)[seq_len(2)]<-c("kW", "nu")
   } else {
     res<-cbind(kW.nu.matrix, res)
     colnames(res)<-c("kW", "nu", methods)
@@ -88,11 +89,11 @@ optimizeParameters<-function(
   optimal.parameters<-matrix(0, ncol=2, nrow=2)
   colnames(optimal.parameters)<-c("kW", "nu")
   if(any(methods=="fnorm"| methods=="all")){
-    optimal.parameters<-res[which(res$fnorm==min(res$fnorm)), 1:2]
+    optimal.parameters<-res[which(res$fnorm==min(res$fnorm)), seq_len(2)]
   }
-  if(any(methods=="wrong.sign"| methods=="all")){	
+  if(any(methods=="wrong.sign"|methods=="all")){	
     optimal.parameters<-rbind(optimal.parameters, 
-    res[which(res$wrong.sign==min(res$wrong.sign)), 1:2])
+    res[which(res$wrong.sign==min(res$wrong.sign)), seq_len(2)])
   }
   if(dim(optimal.parameters)[1]==2){
     rownames(optimal.parameters)<-c("fnorm", "wrong.sign")

@@ -22,8 +22,8 @@ funcThresh<-function(.x, Y, Weights, Factor, anno, index.ref, thresholds, set.si
     data.cor<-cor(Y[, .x])
   }
   
-  data.cor<-data.cor[-(1:length(index.ref)), (1:length(index.ref))]
+  data.cor<-data.cor[-(seq_len(length(index.ref))), seq_len(length(index.ref))]
   max.cor<-apply(data.cor, 1, function(a) max(abs(a)))
-  res<-sapply(thresholds, function(a) length(which(max.cor>a))/set.size)
+  res<-vapply(thresholds, function(a) length(which(max.cor>a))/set.size, double(1))
   return(res)
 }

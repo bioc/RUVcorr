@@ -37,7 +37,7 @@
 #' anno<-as.matrix(sample(1:4, dim(Y$Y)[1], replace=TRUE))
 #' colnames(anno)<-"Factor"
 #' weights<-findWeights(Y$Y, anno, "Factor")
-#' calculateThreshold(Y$Y, exclude=251:500, index.ref=1:10, 
+#' calculateThreshold(Y$Y, exclude=seq(251,500,1), index.ref=seq_len(10), 
 #' Weights=weights, anno=anno, Factor="Factor")
 #' @author Saskia Freytag
 #' @seealso \code{\link{funcThresh}}
@@ -55,9 +55,7 @@ calculateThreshold<-function(X,
       parallel=FALSE
 ){
   
-
   if(is.Weights(Weights)[[1]]) Weights<-Weights$Weights
-
   if(is.null(Weights)!=TRUE){
     if(length(unique(anno[, 
     which(colnames(anno)==Factor)]))!=length(Weights)){

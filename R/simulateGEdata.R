@@ -139,24 +139,24 @@
     }
     X.W <- mvrnorm(m, rep(0, (corr.strength + k)), Sigma.XW)
     
-    X.beta <- X.W[, 1:corr.strength] %*% beta
+    X.beta <- X.W[, seq_len(corr.strength)] %*% beta
     X.beta <- X.beta + matrix(rep(c(runif(ne, 0, 16), rep(0,
     n - nc - ne), rep(0, (nc))), each = m), nrow = m,
      ncol = n)
     if(intercept){
-      W <- X.W[, (corr.strength + 1):(corr.strength + (k-1))]
+      W <- X.W[, seq((corr.strength + 1), (corr.strength + (k-1)), 1)]
       W<-cbind(1, W)
     } else {
-      W <- X.W[, (corr.strength + 1):(corr.strength + k)]
+      W <- X.W[, seq((corr.strength + 1), (corr.strength + k), 1)]
     }
   }
   
   eps <- matrix(rnorm(m * n, 0, Sigma.eps), nrow = m, ncol = n)
   Sigma <- diag(n)
-  Sigma.tmp <- cor(X.beta[, 1:(n - nc)])
-  Sigma[1:(n - nc), 1:(n - nc)] <- Sigma.tmp
-  alpha <- matrix(runif(n * k, -2*size.alpha/sqrt(k), 2*size.alpha/sqrt(k)), ncol = n,
-   nrow = k)
+  Sigma.tmp <- cor(X.beta[, seq_len(n - nc)])
+  Sigma[seq_len(n - nc), seq_len(n - nc)] <- Sigma.tmp
+  alpha <- matrix(runif(n * k, -2*size.alpha/sqrt(k),
+   2*size.alpha/sqrt(k)), ncol = n, nrow = k)
   noise <- W %*% alpha
   if (is.null(g)) {
     info <- cbind(c("k", "Mean correlation", "Size alpha", "Intercept"),

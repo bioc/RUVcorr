@@ -1,7 +1,7 @@
 #' Plot of means and inter-quantile ranges of all genes.
 #' 
 #' \code{genePlot} plots the means vs. the inter-quantile ranges of the gene
-#' 	expression values of all genes with the possibility to highlight interesting sets of genes.
+#'    expression values of all genes with the possibility to highlight interesting sets of genes.
 #'
 #' @param Y A matrix of gene expression values or an object of the class \code{simualteGEdata}.
 #' @param index A vector of indices of genes of interest to be displayed in a different color, if \code{index=NULL} no genes are highlighted.
@@ -26,7 +26,9 @@ genePlot<-function(
       title
 ){
   
-  if(is.simulateGEdata(Y)) Y<-Y$Y
+  if(is.simulateGEdata(Y)[[1]]) {
+    Y<-Y$Y
+  }
   
   tmpMeans<-colMeans(Y)
   tmpIQR<-apply(Y, 2, function(x) findIQR(x))

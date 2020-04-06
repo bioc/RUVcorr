@@ -23,7 +23,7 @@ eigenvaluePlot<-function(Y, nc_index, k=10, center=TRUE, title="Eigenvalue Plot"
   out<-svd(Yc)$d
   out<-out/sum(out)
   
-  plot(out[1:k], xlab="Index", ylab="Proportion of Eigenvalue", 
+  plot(out[seq_len(k)], xlab="Index", ylab="Proportion of Eigenvalue", 
   main=paste(title), bty="l")
   
 }

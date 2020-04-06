@@ -7,13 +7,13 @@
 #' @keywords internal
 #' @author Saskia Freytag
 makeRankedList<-function(Data){
-	reorder<-order(rownames(Data))
-	Data<-Data[reorder, reorder]
+    reorder<-order(rownames(Data))
+    Data<-Data[reorder, reorder]
 
-	Data[lower.tri(Data, diag=TRUE)]<-NA
-	a<-melt(Data)
-	del<-which(is.na(a[ ,3]))
-	a<-a[-del, ]
-	a<-a[order(-abs(a[ ,3])), ]
-	return(a)
+    Data[lower.tri(Data, diag=TRUE)]<-NA 
+    a<-melt(Data)
+    del<-which(is.na(a[ ,3]))
+    a<-a[-del, ]
+    a<-a[order(-abs(a[ ,3])), ]
+    return(a)
 }

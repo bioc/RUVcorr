@@ -2,10 +2,10 @@ Package: RUVcorr
 Type: Package
 Title: Removal of unwanted variation for gene-gene correlations and
     related analysis
-Version: 1.19.0
+Version: 1.1.1
 Date: 2015-02-06
 Author: Saskia Freytag
-Maintainer: Saskia Freytag <freytag.s@wehi.edu.au>
+Maintainer: Saskia Freytag <saskia.freytag@perkins.uwa.edu.au>
 Description: RUVcorr allows to apply global removal of unwanted variation
     (ridged version of RUV) to real and simulated gene expression data.
 Imports:
@@ -20,11 +20,12 @@ Imports:
     BiocParallel,
     grid,
     bladderbatch,
-    reshape2
+    reshape2,
+    graphics
 License: GPL-2
 Suggests:
     knitr,
-    BiocStyle,
     hgu133a2.db
 VignetteBuilder: knitr
 biocViews: GeneExpression, Normalization
+RoxygenNote: 7.0.2

@@ -32,12 +32,12 @@ print.simulateGEdata<-function(
   print(x$Info)
   
   cat("\n\n Truth\n")
-  print(x$Truth[1:5, 1:5], ...)
+  print(x$Truth[seq_len(5), seq_len(5)], ...)
   cat("\n\n Y\n")
-  print(x$Y[1:5, 1:5],...)
+  print(x$Y[seq_len(5), seq_len(5)],...)
   cat("\n\n Noise\n")
-  print(x$Noise[1:5, 1:5], ...)
+  print(x$Noise[seq_len(5), seq_len(5)], ...)
   cat("\n\n Sigma\n")
-  print(x$Sigma[1:5, 1:5], ...)
+  print(x$Sigma[seq_len(5), seq_len(5)], ...)
   
 }

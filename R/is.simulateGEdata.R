@@ -20,3 +20,20 @@ is.simulateGEdata<-function(
   
 return(class(x)=="simulateGEdata")
 }
+
+#' Checking \code{Weights} class.
+#'
+#' \code{is.Weights} checks if object is of \code{Weights} class.
+#'
+#' @param x An object.
+#' @return \code{is.Weights} returns a logical scaler; 
+#' \code{TRUE} if the object is of the class \code{Weights}.
+#' @seealso \code{\link{findWeights}}
+#' @author Saskia Freytag
+#' @export
+is.Weights<-function(
+  x ##object
+){
+  
+  return(class(x)=="Weights")
+}

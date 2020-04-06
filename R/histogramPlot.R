@@ -44,7 +44,7 @@ histogramPlot<-function(
       line=NULL
 ){
   
-  if(class(X)=="matrix"){
+  if(is.matrix(X)[[1]]){
     X<-X[lower.tri(X)]
     Y<-Y[lower.tri(Y)]
     max.val<-max(c(max(density(X)$y),max(density(Y)$y)))
@@ -55,12 +55,11 @@ histogramPlot<-function(
     legend("topleft", paste(legend), bty="n" ,lty=1, lwd=3, cex=0.95, ncol=1, col=c(col.X,col.Y))
   }
   
-  if(class(X)=="list"){
+  if(is.list(X)[[1]]){
     if(length(col.X)!=length(X)){
       warning("Specified colors are no longer valid.")
       
       col.X<-hcl(h = seq(0,360,round(360/length(X),2)), c=45, l=70)[seq_len(length(X))]
-      
     }
     X<-lapply(X, function(x) x[lower.tri(x)])
     Y<-Y[lower.tri(Y)]
@@ -70,7 +69,6 @@ histogramPlot<-function(
     if(is.null(line)) line<-rep(1, length(X))
     
     for(i in seq_len(length(X))){
-
       lines(density(X[[i]]), col=col.X[i], lwd=2, lty=line[i])
     }
     

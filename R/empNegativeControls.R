@@ -46,9 +46,7 @@ empNegativeControls.default<-function(
       smoothing=0.1, ## smoothing factor
       nc ##approx number of negative controls
 ){
-  
   if(is.null(colnames(Y))) colnames(Y)<-seq_len(dim(Y)[2])
-
   tmpY<-Y[, -exclude]
   prop<-nc/dim(tmpY)[2]
   ## find the proportion of negative controls to all genes
@@ -65,7 +63,7 @@ empNegativeControls.default<-function(
   partition<-seq(floor(min(tmpMeans)), ceiling(max(tmpMeans)), smoothing)
   ## set partition of data
   
-  for(i in 1:(length(partition)-1)){
+  for(i in seq_len(length(partition)-1)){
     start<-partition[i]
     end<-partition[i+1]
     index<-which(tmpMeans<end & tmpMeans>start)
@@ -75,10 +73,10 @@ empNegativeControls.default<-function(
     size<-ceiling(length(index)*prop)
     ## find how many genes to pick
     tmpIQRsorted<-sort(tmpIQR[index], decreasing=FALSE)
-    empNC<-c(empNC, names(tmpIQRsorted)[1:size])
+    empNC<-c(empNC, names(tmpIQRsorted)[seq_len(size)])
   }
   
-  empNC<-empNC[-sample(1:length(empNC), (length(empNC)-nc))]
+  empNC<-empNC[-sample(seq_len(length(empNC)), (length(empNC)-nc))]
   # randomly remove too many controls
   
   return(which(is.element(colnames(Y), empNC)))
@@ -95,10 +93,10 @@ empNegativeControls.simulateGEdata<-function(
       nc ##approx number of negative controls
 ){
   
-  if(is.simulateGEdata(Y)==FALSE) stop("Y needs to be of class simulateGEdata.")	
-  Y<-Y$Y
-  colnames(Y)<-1:dim(Y)[2]
-  
-  empNegativeControls.default(Y, exclude, smoothing, nc)
+    if(is.simulateGEdata(Y)[[1]]==FALSE)    stop("Y needs to be of class simulateGEdata.")	
+    Y<-Y$Y
+    colnames(Y)<-seq_len(dim(Y)[2])
+    
+    empNegativeControls.default(Y, exclude, smoothing, nc)
   
 }

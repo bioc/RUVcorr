@@ -57,7 +57,7 @@ RUVNaiveRidge.default<-function(
 {
   
   if(check.input){
-    if(is.matrix(Y)==FALSE){stop("Y needs to be a matrix.")}
+    if(is.matrix(Y)[[1]]==FALSE){stop("Y needs to be a matrix.")}
     if(nu<0){stop("nu has to be positive or 0.")}
     if(kW>dim(Y)[1]){ stop("kW is too big.") }
    }
@@ -71,7 +71,7 @@ RUVNaiveRidge.default<-function(
   ## subset negative controls
   
   tmp<-svd(Yc, nu=kW, nv=kW)
-  S.d<-diag(tmp$d[1:kW], nrow=kW, ncol=kW)
+  S.d<-diag(tmp$d[seq_len(kW)], nrow=kW, ncol=kW)
   ## SVD of negative controls
   
   W.hat<-tmp$u%*%S.d

@@ -37,13 +37,13 @@ compareRanks<-function(
 {
   
   if(is.null(colnames(Y))){
-    colnames(Y)<-1:dim(Y)[2]
+    colnames(Y)<-seq_len(dim(Y)[2])
   }
   if(is.null(colnames(Y.hat))){
-    colnames(Y.hat)<-1:dim(Y.hat)[2]
+    colnames(Y.hat)<-seq_len(dim(Y.hat)[2])
   }
   
-  indices<-(1:dim(Y)[2])[-c(exclude_index, ref_index)]
+  indices<-(seq_len(dim(Y)[2]))[-c(exclude_index, ref_index)]
   ran<-sample(indices, no.random)
   
   cor.Y<-cor(Y[, c(ref_index, ran)])
