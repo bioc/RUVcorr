@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1586135436402.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3881060965",
+    "id" : "AF9CF977",
+    "lastKnownWriteTime" : 1586136305,
+    "last_content_update" : 1586136305,
+    "path" : "~/Desktop/RUVcorr/R/is.optimizeParameters.R",
+    "project_path" : "R/is.optimizeParameters.R",
+    "properties" : {
+        "cursorPosition" : "24,1",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

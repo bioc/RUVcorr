@@ -35,7 +35,8 @@ ECDFPlot<-function(
       legend
 ){ 
   
-  if(class(X)=="matrix"){
+  if(is.matrix(X)[[1]]){
+
     if(index[1]!="all"){
       X<-X[index, index]
       Y<-Y[index, index]
@@ -75,7 +76,8 @@ ECDFPlot<-function(
     plot(ECDF.Y, xlim=c(0, 1), ylim=c(0, 1), col=col.Y, 
     xlab="|Correlation|", ylab="Proportion of |Correlation|", lwd=2,
     main=paste(title), verticals=TRUE, do.p=FALSE, bty="l")
-    for (i in 1:length(X)){
+    
+    for (i in seq_len(length(X))){
       lines(ECDF.X[[i]], col=col.X[i], lwd=2, verticals=TRUE, do.p=FALSE)
     }
     legend("bottomright", legend=paste(legend), col=c(col.X, col.Y), 

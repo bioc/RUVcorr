@@ -23,11 +23,12 @@ plotDesign<-function(
       anno, 
       Factors, 
       anno.names=Factors, 
-      orderby=NULL)
-{
+      orderby=NULL){
   
   ##testing
-  if(any(is.element(Factors,colnames(anno))==FALSE)) stop("Factors need to be in anno.")
+  if(any(is.element(Factors,colnames(anno))==FALSE)) {
+    stop("Factors need to be in anno.")
+  }
   if(is.null(orderby)==FALSE){
     if(is.element(orderby, colnames(anno))==FALSE) stop("orderby need to be in anno.")
   }

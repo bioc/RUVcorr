@@ -13,7 +13,6 @@
 #' estimated signs is calculated if \code{method="all"}
 #' both are calculated.
 #' @return \code{assessQuality} returns a vector of the requested quality assessments.
-#'
 #' @details
 #' The squared Frobenius norm used for \code{assessQuality} has the following structure
 #'   \deqn{F=\frac{\|E-T\|^2}{s}}

@@ -26,7 +26,8 @@ wcor<-function(
       Weights)
 {
   
-  if(class(Weights)=="Weights") Weights<-Weights$Weights
+  if(is.Weights(Weights)) Weights<-Weights$Weights
+
   if(any(colnames(anno)==Factor)==FALSE){ 
     stop("Factor has to be a column of anno.")
   }
@@ -41,7 +42,8 @@ wcor<-function(
   }
   
   expression<-splitByFactor(X, anno, Factor)
-  all.cor<-lapply(1:length(expression), function(x) 
+  all.cor<-lapply(seq_len(length(expression)), function(x) 
+
   cor(expression[[x]])*as.numeric(Weights[x]))
   return(Reduce("+", all.cor))
   

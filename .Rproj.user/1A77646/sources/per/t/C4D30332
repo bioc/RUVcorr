@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1586135448350.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "479705981",
+    "id" : "C4D30332",
+    "lastKnownWriteTime" : 1586136305,
+    "last_content_update" : 1586136305,
+    "path" : "~/Desktop/RUVcorr/R/histogramPlot.R",
+    "project_path" : "R/histogramPlot.R",
+    "properties" : {
+        "cursorPosition" : "72,0",
+        "scrollLine" : "60"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 10,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

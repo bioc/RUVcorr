@@ -28,7 +28,9 @@ plot.optimizeParameters<-function(
 ){
   
   var.names<-c("kW", "nu")
-  if(is.optimizeParameters(x)==FALSE) {stop("x must be of the class optimizeParameters.")}
+  if(is.optimizeParameters(x)==FALSE) {
+    stop("x must be of the class optimizeParameters.")
+  }
   
   if(dim(x$All.results)[2]==4){
     opt1<-x$All.results[, 1:3]
@@ -48,9 +50,10 @@ plot.optimizeParameters<-function(
   min.value<-lapply(opt, function(i) which(i==min(i), arr.ind=TRUE)[1,])
   f<-colorRampPalette(c("dodgerblue4", "dodgerblue1", "cornflowerblue", 
   "lightblue2", "white", "lightcoral", "indianred1", "firebrick", "indianred4")) 
-  plotL<-lapply(1:length(opt), function(i) levelplot(opt[[i]], 
-  scales=list(x=list(rot=90)), col.regions=f(100), main=main[i], colorkey=list(width=0.8),
-  panel=function(...){
+
+  plotL<-lapply(seq_len(length(opt)), function(i) levelplot(opt[[i]], 
+  scales=list(x=list(rot=90)), col.regions=f(100), main=main[i], 
+  colorkey=list(width=0.8), panel=function(...){
     panel.levelplot(...)
      grid.points(min.value[[i]][1], min.value[[i]][2], pch=19) 
   }))

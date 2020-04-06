@@ -24,6 +24,20 @@
 #' try(dev.off(), silent=TRUE)
 #' par(mar=c(5.1, 4.1, 4.1, 2.1), mgp=c(3, 1, 0), las=0, mfrow=c(1, 1))
 #' PCAPlot(Y$Y, anno=anno, Factor="Factor", numeric=TRUE, title="")
+#' @importFrom graphics abline
+#' @importFrom graphics boxplot
+#' @importFrom graphics hist
+#' @importFrom graphics image
+#' @importFrom graphics layout
+#' @importFrom graphics legend
+#' @importFrom graphics lines
+#' @importFrom graphics mtext
+#' @importFrom graphics par
+#' @importFrom graphics plot
+#' @importFrom graphics plot.new
+#' @importFrom graphics points
+#' @importFrom graphics rect
+#'
 #' @seealso \code{\link[stats]{prcomp}}
 #' @author Saskia Freytag
 #' @export

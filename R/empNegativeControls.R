@@ -46,7 +46,9 @@ empNegativeControls.default<-function(
       smoothing=0.1, ## smoothing factor
       nc ##approx number of negative controls
 ){
-  if(is.null(colnames(Y))) colnames(Y)<-1:dim(Y)[2]
+  
+  if(is.null(colnames(Y))) colnames(Y)<-seq_len(dim(Y)[2])
+
   tmpY<-Y[, -exclude]
   prop<-nc/dim(tmpY)[2]
   ## find the proportion of negative controls to all genes

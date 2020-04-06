@@ -30,6 +30,7 @@ labels in \code{Factor} are used.}
 \code{PCAPlot} generates principle component plots for with the possibility
 to color arrays according to a known factor.
 }
+<<<<<<< HEAD
 \examples{
 Y<-simulateGEdata(500, 500, 10, 2, 5, g=NULL, Sigma.eps=0.1,
 250, 100, intercept=FALSE, check.input=FALSE)
@@ -41,6 +42,10 @@ colnames(anno)<-"Factor"
 try(dev.off(), silent=TRUE)
 par(mar=c(5.1, 4.1, 4.1, 2.1), mgp=c(3, 1, 0), las=0, mfrow=c(1, 1))
 PCAPlot(Y$Y, anno=anno, Factor="Factor", numeric=TRUE, title="")
+=======
+\seealso{
+\code{\link[stats]{prcomp}}
+>>>>>>> 9027cd8... fix merge conflicts
 }
 \author{
 Saskia Freytag

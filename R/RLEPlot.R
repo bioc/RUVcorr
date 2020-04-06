@@ -109,6 +109,7 @@ RLEPlot<-function(
         category[, 1]))[order(unique(as.numeric(category[, 1])))], colours[1:n.category])
       } else {colour.code<-cbind(sort(unique(as.character(category[,1])), 
       na.last=TRUE), colours[1:n.category])}
+
       colnames(colour.code)<-c("x", "colour")
       new.colours<-merge(category, colour.code, by="x")
       new.colours<-new.colours[order(as.numeric

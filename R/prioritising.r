@@ -41,7 +41,9 @@ prioritise<-function(X,
   } else {
     tmp<-cor(X[, c(ref_index, cand_index)])
   }
-  tmp<-tmp[1:length(ref_index), (length(ref_index)+1):dim(tmp)[2]]
+  tmp<-tmp[seq_len(length(ref_index)), 
+    seq((length(ref_index)+1), dim(tmp)[2], 1)]
+
   index<-apply(tmp, 2, function(z) any(abs(z)>=threshold))
   prioritisedGenes<-colnames(X)[cand_index[index]]
   strength<-apply(tmp, 2, function(z) length(which(abs(z)>=threshold)))[index]

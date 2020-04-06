@@ -23,7 +23,6 @@
 #'     \item{\code{Compare.raw}}{A vector of the quality assessment for the uncorrected data.}
 #'     \item{\code{Optimal.parameter}}{A matrix or a vector giving the optimal parameter combination.}
 #'   }
-#'
 #' @details
 #' The simulated data is cleaned using removal of unwanted variation with all 
 #' combinations of the input parameters. The quality of each cleaning is judged by the

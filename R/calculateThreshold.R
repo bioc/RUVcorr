@@ -55,7 +55,9 @@ calculateThreshold<-function(X,
       parallel=FALSE
 ){
   
-  if(class(Weights)=="Weights") Weights<-Weights$Weights
+
+  if(is.Weights(Weights)[[1]]) Weights<-Weights$Weights
+
   if(is.null(Weights)!=TRUE){
     if(length(unique(anno[, 
     which(colnames(anno)==Factor)]))!=length(Weights)){
@@ -67,10 +69,10 @@ calculateThreshold<-function(X,
     stop("All thresholds need to be in the range [0,1].")
   }
   
-  all.genes<-setdiff(1:dim(X)[2], c(exclude,index.ref))
-  genes<-lapply(1:1000, function(x) c(index.ref, sample(all.genes, set.size)))
-  names(genes)<-1:1000
-  
+  all.genes<-setdiff(seq_len(dim(X)[2]), c(exclude,index.ref))
+  genes<-lapply(seq_len(1000), function(x) c(index.ref, sample(all.genes, set.size)))
+  names(genes)<-seq_len(1000)
+
   if(parallel){
     multicoreParam <- MulticoreParam(workers = cpus)
     res<-bplapply(genes, funcThresh, BPPARAM = multicoreParam, Y=X, 

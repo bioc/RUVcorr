@@ -59,7 +59,8 @@ histogramPlot<-function(
     if(length(col.X)!=length(X)){
       warning("Specified colors are no longer valid.")
       
-      col.X<-hcl(h = seq(0,360,round(360/length(X),2)), c=45, l=70)[1:length(X)]
+      col.X<-hcl(h = seq(0,360,round(360/length(X),2)), c=45, l=70)[seq_len(length(X))]
+      
     }
     X<-lapply(X, function(x) x[lower.tri(x)])
     Y<-Y[lower.tri(Y)]
@@ -68,7 +69,8 @@ histogramPlot<-function(
     main=paste(title), xlab="Correlation Size", border=col.Y)
     if(is.null(line)) line<-rep(1, length(X))
     
-    for(i in 1:length(X)){
+    for(i in seq_len(length(X))){
+
       lines(density(X[[i]]), col=col.X[i], lwd=2, lty=line[i])
     }
     

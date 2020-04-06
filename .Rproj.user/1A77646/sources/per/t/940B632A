@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1586134958707.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1607294029",
+    "id" : "940B632A",
+    "lastKnownWriteTime" : 1586136305,
+    "last_content_update" : 1586136305,
+    "path" : "~/Desktop/RUVcorr/R/plot.optimizeParameters.r",
+    "project_path" : "R/plot.optimizeParameters.r",
+    "properties" : {
+        "cursorPosition" : "52,22",
+        "scrollLine" : "44"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
