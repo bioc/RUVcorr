@@ -47,7 +47,10 @@ ECDFPlot<-function(
 ){ 
   
   if(is.matrix(X)[[1]]){
+<<<<<<< HEAD
     
+=======
+>>>>>>> 7790771... chnages to make work on R 4.0
     if(index[1]!="all"){
       X<-X[index, index]
       Y<-Y[index, index]
@@ -87,7 +90,10 @@ ECDFPlot<-function(
     plot(ECDF.Y, xlim=c(0, 1), ylim=c(0, 1), col=col.Y, 
     xlab="|Correlation|", ylab="Proportion of |Correlation|", lwd=2,
     main=paste(title), verticals=TRUE, do.p=FALSE, bty="l")
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7790771... chnages to make work on R 4.0
     for (i in seq_len(length(X))){
       lines(ECDF.X[[i]], col=col.X[i], lwd=2, verticals=TRUE, do.p=FALSE)
     }

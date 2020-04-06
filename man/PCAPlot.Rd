@@ -49,6 +49,10 @@ colnames(anno)<-"Factor"
 try(dev.off(), silent=TRUE)
 par(mar=c(5.1, 4.1, 4.1, 2.1), mgp=c(3, 1, 0), las=0, mfrow=c(1, 1))
 PCAPlot(Y$Y, anno=anno, Factor="Factor", numeric=TRUE, title="")
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7790771... chnages to make work on R 4.0
 }
 \seealso{
 \code{\link[stats]{prcomp}}

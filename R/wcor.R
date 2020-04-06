@@ -26,8 +26,12 @@ wcor<-function(
       Weights)
 {
   
+<<<<<<< HEAD
   if(is.Weights(Weights)[[1]]) Weights<-Weights$Weights
 
+=======
+  if(is.Weights(Weights)) Weights<-Weights$Weights
+>>>>>>> 7790771... chnages to make work on R 4.0
   if(any(colnames(anno)==Factor)==FALSE){ 
     stop("Factor has to be a column of anno.")
   }
@@ -43,7 +47,10 @@ wcor<-function(
   
   expression<-splitByFactor(X, anno, Factor)
   all.cor<-lapply(seq_len(length(expression)), function(x) 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7790771... chnages to make work on R 4.0
   cor(expression[[x]])*as.numeric(Weights[x]))
   return(Reduce("+", all.cor))
   

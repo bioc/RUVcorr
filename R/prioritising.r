@@ -43,7 +43,10 @@ prioritise<-function(X,
   }
   tmp<-tmp[seq_len(length(ref_index)), 
     seq((length(ref_index)+1), dim(tmp)[2], 1)]
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7790771... chnages to make work on R 4.0
   index<-apply(tmp, 2, function(z) any(abs(z)>=threshold))
   prioritisedGenes<-colnames(X)[cand_index[index]]
   strength<-apply(tmp, 2, function(z) length(which(abs(z)>=threshold)))[index]
