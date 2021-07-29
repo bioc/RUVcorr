@@ -25,7 +25,8 @@ Imports:
 License: GPL-2
 Suggests:
     knitr,
-    hgu133a2.db
+    hgu133a2.db,
+    rmarkdown
 VignetteBuilder: knitr
 biocViews: GeneExpression, Normalization
 RoxygenNote: 7.0.2
